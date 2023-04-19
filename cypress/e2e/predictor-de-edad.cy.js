@@ -4,14 +4,26 @@ describe('Predictor de edad', () => {
     
     it('Verificar los datos devueltos', () => {
         const parametro = 'name';
-        const name = 'Pedro';
-        cy.request(`${endpoint}?${parametro}=${name}`).then(response =>{
+        const personName = 'Pedro';
+        cy.request(`${endpoint}?${parametro}=${personName}`).then(response =>{
             const data = JSON.stringify(response.body)
-            const age = JSON.stringify(response.body.age)
-            const count = JSON.stringify(response.body.count)
-            const name = JSON.stringify(response.body.name)
-            cy.log(data)
-            cy.wait(20000)
+            const age = Number(JSON.stringify(response.body.age))
+            const count = Number(JSON.stringify(response.body.count))
+            const name = String(JSON.stringify(response.body.name)).replace(/['"]+/g, '')
+
+            cy.log('Verificar propiedad "age"')
+            expect(age).to.be.a('number')
+            expect(age).to.not.be.null
+          
+            cy.log('Verificar propiedad "count"')
+            expect(count).to.be.a('number')
+            expect(count).to.not.be.null
+
+            cy.log('Verificar propiedad "name"')
+            expect(name).to.be.a('string')
+            expect(name).to.equal(personName)
+            
+            cy.wait(30000) 
         })
     });
 });
